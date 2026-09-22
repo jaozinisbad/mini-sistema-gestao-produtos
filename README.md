@@ -35,6 +35,8 @@ Relações: um usuário possui várias cestas; uma cesta possui vários itens; c
 5. No terminal, dentro desta pasta, execute `php -S localhost:8000 -t public`.
 6. Acesse `http://localhost:8000` e crie uma conta.
 
+Para adicionar dados de demonstração, execute `php scripts/seed.php` dentro da pasta do projeto. O comando insere três fornecedores e nove produtos; se for repetido, não duplica esses exemplos.
+
 O Supabase cria o banco PostgreSQL ao criar o projeto. Na primeira conexão, `Database::connect()` cria automaticamente as cinco tabelas, se não existirem. Não é necessário importar SQL manualmente. O servidor deve apontar para `public`, para que `config.php` e `src` não sejam servidos diretamente.
 
 As tabelas têm Row Level Security (RLS) ativado, sem políticas de acesso pela API pública do Supabase. O backend PHP acessa o PostgreSQL pelo usuário do banco; a autenticação dos usuários do site continua sendo feita pelo próprio PHP.
@@ -62,6 +64,7 @@ config.php           Configuração do MySQL
 src/Database.php     Conexão PDO/PostgreSQL e criação automática das tabelas
 src/Models.php       Classes User, Supplier, Product e Basket
 public/index.php     Rotas, formulários, AJAX e telas
+scripts/seed.php     Dados de demonstração
 docs/der.svg         DER para consulta no README
 ```
 
