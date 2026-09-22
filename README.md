@@ -12,7 +12,7 @@ Aplicação web acadêmica em PHP orientado a objetos, PostgreSQL no Supabase vi
 
 ## Esboços das telas
 
-[Abrir os esboços no Figma](https://www.figma.com/design/mluNZpMTkSifzuvmTFSpxC) — login/cadastro, cadastros e atualização, seleção de produtos e cesta. A navegação está representada em todas as telas.
+[Abrir os esboços no Figma](https://www.figma.com/design/mluNZpMTkSifzuvmTFSpxC) — login/cadastro, cadastros, atualização AJAX, seleção de produtos e cesta. A navegação está representada em todas as telas.
 
 ## Diagrama Entidade Relacionamento
 
@@ -44,8 +44,8 @@ As tabelas têm Row Level Security (RLS) ativado, sem políticas de acesso pela 
 ## Como usar
 
 1. Cadastre um usuário e entre na conta.
-2. Em **Cadastros**, cadastre fornecedores e produtos vinculados a eles.
-3. Em **Atualização AJAX**, edite ou exclua fornecedores, produtos e itens da cesta sem enviar a página inteira. A lista é recarregada após a confirmação do servidor.
+2. Em **Cadastros**, inclua fornecedores e produtos vinculados a eles. Essa tela contém apenas formulários de inclusão.
+3. Em **Atualização AJAX**, escolha registros existentes para editar ou excluir fornecedores, produtos e itens da cesta. A alteração é enviada sem recarregar a página; a lista é recarregada após a confirmação do servidor.
 4. Em **Produtos**, marque ao menos um checkbox e adicione os itens à cesta.
 5. Em **Cesta**, confira itens, quantidade e valor total, ou remova itens.
 
@@ -64,6 +64,8 @@ config.php           Configuração do MySQL
 src/Database.php     Conexão PDO/PostgreSQL e criação automática das tabelas
 src/Models.php       Classes User, Supplier, Product e Basket
 public/index.php     Rotas, formulários, AJAX e telas
+public/app.js        Interações do catálogo e atualização AJAX
+views/              Telas separadas de cadastro e atualização
 scripts/seed.php     Dados de demonstração
 docs/der.svg         DER para consulta no README
 ```
