@@ -1,78 +1,76 @@
 # Mini Sistema de Gestão de Produtos
 
-Aplicação web acadêmica em PHP orientado a objetos, PostgreSQL no Supabase via PDO, HTML, CSS, JavaScript e Bootstrap. Permite cadastro e autenticação de usuários, gestão de fornecedores e produtos e uma cesta com uma unidade por produto.
+Este projeto é um pequeno sistema web para organizar fornecedores e produtos e montar uma cesta de compras. Cada pessoa cria sua conta, escolhe os produtos que deseja e vê a quantidade de itens e o valor total da cesta. Cada produto pode entrar **uma única vez**: não existe campo de quantidade.
 
-## Equipe
+Foi desenvolvido para um trabalho acadêmico com **PHP orientado a objetos**, **PDO**, **PostgreSQL no Supabase**, **HTML**, **CSS**, **JavaScript** e **Bootstrap**.
 
-| Nome | RA |
-| --- | --- |
-| Preencher | Preencher |
+## O que o sistema oferece
 
-> Substitua os campos acima pelos nomes e RAs de todos os integrantes antes da entrega. Cada integrante deve registrar seus próprios commits.
+- Cadastro de usuários e login.
+- Cadastro de fornecedores e produtos vinculados a eles.
+- Uma tela de **Cadastros** para incluir novos registros.
+- Uma tela de **Atualização AJAX** para editar ou excluir fornecedores, produtos e itens da cesta sem recarregar a página.
+- Catálogo com seleção de produtos por checkbox e validação de pelo menos um item.
+- Cesta individual por usuário, com resumo da quantidade de produtos e do valor total.
 
-## Esboços das telas
+## Telas e modelo de dados
 
-[Abrir os esboços no Figma](https://www.figma.com/design/mluNZpMTkSifzuvmTFSpxC) — login/cadastro, cadastros, atualização AJAX, seleção de produtos e cesta. A navegação está representada em todas as telas.
+Os [esboços no Figma](https://www.figma.com/design/mluNZpMTkSifzuvmTFSpxC) mostram login e criação de conta, cadastros, atualização AJAX, catálogo e cesta. Todas as telas do sistema têm menu de navegação.
 
-## Diagrama Entidade Relacionamento
+O diagrama abaixo reúne as cinco tabelas, seus campos e relacionamentos:
 
-![DER com todas as tabelas, campos e relacionamentos](docs/der.svg)
+![Diagrama Entidade Relacionamento do sistema](docs/der.svg)
 
-Relações: um usuário possui várias cestas; uma cesta possui vários itens; cada item aponta para um produto; um fornecedor possui vários produtos. A chave composta `(basket_id, product_id)` impede repetição do mesmo produto na cesta.
+As tabelas são `usuarios`, `fornecedores`, `produtos`, `cestas` e `itens_cesta`. Um fornecedor pode ter vários produtos; um usuário pode ter cestas; e cada cesta contém produtos. A chave composta de `itens_cesta` impede que o mesmo produto seja adicionado duas vezes à mesma cesta.
 
-## Requisitos
+## Como executar
 
-- PHP 8.1 ou superior, com extensões `pdo_pgsql` e `mbstring`.
-- Projeto Supabase com banco PostgreSQL.
-- Navegador com JavaScript e acesso à CDN do Bootstrap.
+**Você precisa de:** PHP 8.1 ou superior com `pdo_pgsql` e `mbstring`, um projeto no Supabase e um navegador com JavaScript. O visual usa Bootstrap por CDN, então é necessário acesso à internet.
 
-## Instalação e execução
+1. Crie um projeto no [Supabase](https://supabase.com/dashboard) e guarde a senha do banco definida na criação.
+2. No painel do projeto, abra **Connect → Session pooler** e copie os dados de conexão. Use o host e o usuário mostrados pelo próprio Supabase; a porta do modo de sessão é `5432`.
+3. Copie `.env.example` para `.env` e preencha `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD`. Mantenha `DB_SSLMODE=require`. O `.env` não entra no Git. Se houver variáveis de ambiente definidas no sistema, elas têm prioridade.
+4. No `php.ini`, habilite `extension=pdo_pgsql` e `extension=mbstring`.
+5. Dentro da pasta do projeto, inicie o servidor:
 
-1. Crie um projeto em [Supabase](https://supabase.com/dashboard) e anote a senha do banco definida na criação.
-2. No painel do projeto, abra **Connect → Session pooler**. Copie host, porta, banco e usuário. O modo de sessão usa a porta `5432` e funciona em redes IPv4.
-3. Copie `.env.example` para `.env` e preencha `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD` com os dados do painel. Mantenha `DB_SSLMODE=require`. O arquivo `.env` é ignorado pelo Git; não publique a senha. Variáveis de ambiente do sistema têm prioridade sobre ele.
-4. Ative `extension=pdo_pgsql` e `extension=mbstring` no `php.ini`.
-5. No terminal, dentro desta pasta, execute `php -S localhost:8000 -t public`.
-6. Acesse `http://localhost:8000` e crie uma conta.
+   ```bash
+   php -S localhost:8000 -t public
+   ```
 
-Para adicionar dados de demonstração, execute `php scripts/seed.php` dentro da pasta do projeto. O comando insere três fornecedores e nove produtos; se for repetido, não duplica esses exemplos.
+6. Abra `http://localhost:8000`, crie uma conta e faça login.
 
-O Supabase cria o banco PostgreSQL ao criar o projeto. Na primeira conexão, `Database::connect()` cria automaticamente as cinco tabelas, se não existirem. Não é necessário importar SQL manualmente. O servidor deve apontar para `public`, para que `config.php` e `src` não sejam servidos diretamente.
+O Supabase cria o banco quando o projeto é criado. Na primeira conexão, a aplicação cria automaticamente as tabelas que faltarem. Não é preciso importar um arquivo SQL. O servidor deve apontar para `public`, mantendo `config.php` e `src/` fora da área servida pelo navegador.
 
-As tabelas usam nomes em português: `usuarios`, `fornecedores`, `produtos`, `cestas` e `itens_cesta`. Se você estiver atualizando uma instalação antiga que ainda usa nomes em inglês, execute uma vez `php scripts/renomear_tabelas.php` antes de abrir o site; a migração preserva os registros e os relacionamentos.
+Para incluir os dados de demonstração (3 fornecedores e 9 produtos), execute `php scripts/seed.php`. O comando pode ser repetido sem duplicar esses exemplos.
 
-As tabelas têm Row Level Security (RLS) ativado, sem políticas de acesso pela API pública do Supabase. O backend PHP acessa o PostgreSQL pelo usuário do banco; a autenticação dos usuários do site continua sendo feita pelo próprio PHP.
+Se você tiver uma versão antiga deste projeto com tabelas em inglês, execute **uma vez**, antes de abrir o site, `php scripts/renomear_tabelas.php`. A migração renomeia as tabelas e preserva os registros e relacionamentos.
 
 ## Como usar
 
-1. Cadastre um usuário e entre na conta.
-2. Em **Cadastros**, inclua fornecedores e produtos vinculados a eles. Essa tela contém apenas formulários de inclusão.
-3. Em **Atualização AJAX**, escolha registros existentes para editar ou excluir fornecedores, produtos e itens da cesta. A alteração é enviada sem recarregar a página; a lista é recarregada após a confirmação do servidor.
-4. Em **Produtos**, marque ao menos um checkbox e adicione os itens à cesta.
-5. Em **Cesta**, confira itens, quantidade e valor total, ou remova itens.
+Comece cadastrando um fornecedor; depois, cadastre um produto e escolha esse fornecedor no formulário. Para alterar dados já existentes, vá até **Atualização AJAX**, escolha **Editar** ou **Excluir** e acompanhe a confirmação na própria página. No **Catálogo**, marque um ou mais produtos e adicione à **Cesta**. Lá você pode conferir o total e remover itens.
 
-## Regras e segurança
+## Decisões de implementação
 
-- O enunciado menciona “SHA254”, que não é um algoritmo padronizado. Foi adotado **SHA-256 com salt aleatório por usuário** para atender à intenção do requisito. Para um sistema de produção, recomenda-se `password_hash()` com Argon2id ou bcrypt.
-- Senhas nunca são armazenadas em texto puro. A autenticação usa `hash_equals()`; sessões são renovadas no login.
-- Todas as alterações passam por token CSRF, validação no servidor e consultas preparadas com PDO.
-- Um produto só pode pertencer a um fornecedor existente. Um fornecedor com produtos não pode ser excluído até que seus produtos sejam removidos ou transferidos.
-- Não há campo de quantidade. Cada produto aparece no máximo uma vez por cesta.
+- O enunciado cita “SHA254”, que não é um algoritmo padronizado. Para atender à intenção do requisito, as senhas são armazenadas com **SHA-256 e um salt aleatório por usuário**. Para uso em produção, `password_hash()` com Argon2id ou bcrypt seria a escolha adequada.
+- O PHP cuida do cadastro, do login e das sessões. O Supabase é usado como banco PostgreSQL. As tabelas têm **Row Level Security (RLS)** ativado e não oferecem acesso pela API pública do Supabase.
+- As operações usam consultas preparadas com PDO, validação no servidor e token CSRF. O login renova a sessão e a comparação do hash usa `hash_equals()`.
+- Um fornecedor com produtos não pode ser excluído até que os produtos sejam removidos ou vinculados a outro fornecedor.
 
-## Estrutura
+## Arquivos principais
 
-```text
-config.php           Configuração do MySQL
-src/Database.php     Conexão PDO/PostgreSQL e criação automática das tabelas
-src/Models.php       Classes User, Supplier, Product e Basket
-public/index.php     Rotas, formulários, AJAX e telas
-public/app.js        Interações do catálogo e atualização AJAX
-views/              Telas separadas de cadastro e atualização
-scripts/seed.php     Dados de demonstração
-scripts/renomear_tabelas.php  Migração das tabelas antigas para nomes em português
-docs/der.svg         DER para consulta no README
-```
+| Caminho | Função |
+| --- | --- |
+| `config.php` e `.env.example` | Configuração da conexão |
+| `src/Database.php` e `src/Models.php` | Banco, criação das tabelas e classes do sistema |
+| `public/` e `views/` | Páginas e interações AJAX |
+| `scripts/seed.php` | Dados de demonstração |
+| `scripts/renomear_tabelas.php` | Migração dos nomes antigos das tabelas |
+| `docs/der.svg` | Diagrama Entidade Relacionamento |
 
-## Git
+## Equipe e entrega
 
-O histórico registra etapas de implementação. Antes da entrega, cada integrante deve realizar alterações identificáveis e commits em sua própria conta Git. Publique este repositório no GitHub ou serviço exigido pela disciplina.
+| Nome | RA |
+| --- | --- |
+| **Preencher** | **Preencher** |
+
+Antes de entregar, preencha os nomes e RAs de todos os integrantes. Cada pessoa da equipe deve fazer commits com sua própria conta Git. Depois, publique o repositório no GitHub ou no serviço indicado pela disciplina e envie o link ao professor.
