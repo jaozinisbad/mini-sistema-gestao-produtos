@@ -24,10 +24,10 @@ $products = [
 $db = Database::connect();
 $db->beginTransaction();
 try {
-    $findSupplier = $db->prepare('SELECT id FROM suppliers WHERE name = ? ORDER BY id LIMIT 1');
-    $insertSupplier = $db->prepare('INSERT INTO suppliers (name, email, phone) VALUES (?, ?, ?) RETURNING id');
-    $findProduct = $db->prepare('SELECT id FROM products WHERE supplier_id = ? AND name = ? LIMIT 1');
-    $insertProduct = $db->prepare('INSERT INTO products (supplier_id, name, description, price) VALUES (?, ?, ?, ?)');
+    $findSupplier = $db->prepare('SELECT id FROM fornecedores WHERE name = ? ORDER BY id LIMIT 1');
+    $insertSupplier = $db->prepare('INSERT INTO fornecedores (name, email, phone) VALUES (?, ?, ?) RETURNING id');
+    $findProduct = $db->prepare('SELECT id FROM produtos WHERE supplier_id = ? AND name = ? LIMIT 1');
+    $insertProduct = $db->prepare('INSERT INTO produtos (supplier_id, name, description, price) VALUES (?, ?, ?, ?)');
     $supplierIds = [];
     $addedSuppliers = 0;
     $addedProducts = 0;

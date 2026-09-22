@@ -47,27 +47,27 @@ if ($action !== '') {
         if ($action === 'save_supplier') {
             $id = positiveId(field('id')); $name = field('name'); $email = field('email'); $phone = field('phone');
             if ($name === '' || ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL))) fail('Informe um nome e um e-mail válido.');
-            if ($id) { $stmt = $db->prepare('UPDATE suppliers SET name=?,email=?,phone=? WHERE id=?'); $stmt->execute([$name,$email ?: null,$phone ?: null,$id]); }
-            else { $stmt = $db->prepare('INSERT INTO suppliers (name,email,phone) VALUES (?,?,?)'); $stmt->execute([$name,$email ?: null,$phone ?: null]); }
+            if ($id) { $stmt = $db->prepare('UPDATE fornecedores SET name=?,email=?,phone=? WHERE id=?'); $stmt->execute([$name,$email ?: null,$phone ?: null,$id]); }
+            else { $stmt = $db->prepare('INSERT INTO fornecedores (name,email,phone) VALUES (?,?,?)'); $stmt->execute([$name,$email ?: null,$phone ?: null]); }
         } elseif ($action === 'delete_supplier') {
-            $stmt = $db->prepare('DELETE FROM suppliers WHERE id=?'); $stmt->execute([positiveId(field('id'))]);
+            $stmt = $db->prepare('DELETE FROM fornecedores WHERE id=?'); $stmt->execute([positiveId(field('id'))]);
         } elseif ($action === 'save_product') {
             $id = positiveId(field('id')); $supplier = positiveId(field('supplier_id')); $name = field('name'); $description = field('description'); $price = field('price');
             if (!$supplier || $name === '' || !preg_match('/^\d{1,8}(\.\d{1,2})?$/', $price)) fail('Informe fornecedor, nome e preço válido.');
-            if ($id) { $stmt = $db->prepare('UPDATE products SET supplier_id=?,name=?,description=?,price=? WHERE id=?'); $stmt->execute([$supplier,$name,$description ?: null,$price,$id]); }
-            else { $stmt = $db->prepare('INSERT INTO products (supplier_id,name,description,price) VALUES (?,?,?,?)'); $stmt->execute([$supplier,$name,$description ?: null,$price]); }
+            if ($id) { $stmt = $db->prepare('UPDATE produtos SET supplier_id=?,name=?,description=?,price=? WHERE id=?'); $stmt->execute([$supplier,$name,$description ?: null,$price,$id]); }
+            else { $stmt = $db->prepare('INSERT INTO produtos (supplier_id,name,description,price) VALUES (?,?,?,?)'); $stmt->execute([$supplier,$name,$description ?: null,$price]); }
         } elseif ($action === 'delete_product') {
-            $stmt = $db->prepare('DELETE FROM products WHERE id=?'); $stmt->execute([positiveId(field('id'))]);
+            $stmt = $db->prepare('DELETE FROM produtos WHERE id=?'); $stmt->execute([positiveId(field('id'))]);
         } elseif ($action === 'add_items') {
             $ids = $_POST['product_ids'] ?? [];
             if (!is_array($ids) || count($ids) === 0) fail('Selecione pelo menos um produto.');
             $basketId = Basket::current($db, (int)$_SESSION['user_id']);
-            $stmt = $db->prepare('INSERT INTO basket_items (basket_id,product_id) SELECT ?,id FROM products WHERE id=? ON CONFLICT DO NOTHING');
+            $stmt = $db->prepare('INSERT INTO itens_cesta (basket_id,product_id) SELECT ?,id FROM produtos WHERE id=? ON CONFLICT DO NOTHING');
             foreach (array_unique($ids) as $raw) { $id = positiveId((string)$raw); if ($id) $stmt->execute([$basketId,$id]); }
             redirect('basket');
         } elseif ($action === 'remove_item') {
             $basketId = Basket::current($db, (int)$_SESSION['user_id']);
-            $stmt = $db->prepare('DELETE FROM basket_items WHERE basket_id=? AND product_id=?');
+            $stmt = $db->prepare('DELETE FROM itens_cesta WHERE basket_id=? AND product_id=?');
             $stmt->execute([$basketId,positiveId(field('product_id'))]);
             if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'XMLHttpRequest') redirect('basket');
         } else fail('Ação desconhecida.');

@@ -39,6 +39,8 @@ Para adicionar dados de demonstração, execute `php scripts/seed.php` dentro da
 
 O Supabase cria o banco PostgreSQL ao criar o projeto. Na primeira conexão, `Database::connect()` cria automaticamente as cinco tabelas, se não existirem. Não é necessário importar SQL manualmente. O servidor deve apontar para `public`, para que `config.php` e `src` não sejam servidos diretamente.
 
+As tabelas usam nomes em português: `usuarios`, `fornecedores`, `produtos`, `cestas` e `itens_cesta`. Se você estiver atualizando uma instalação antiga que ainda usa nomes em inglês, execute uma vez `php scripts/renomear_tabelas.php` antes de abrir o site; a migração preserva os registros e os relacionamentos.
+
 As tabelas têm Row Level Security (RLS) ativado, sem políticas de acesso pela API pública do Supabase. O backend PHP acessa o PostgreSQL pelo usuário do banco; a autenticação dos usuários do site continua sendo feita pelo próprio PHP.
 
 ## Como usar
@@ -67,6 +69,7 @@ public/index.php     Rotas, formulários, AJAX e telas
 public/app.js        Interações do catálogo e atualização AJAX
 views/              Telas separadas de cadastro e atualização
 scripts/seed.php     Dados de demonstração
+scripts/renomear_tabelas.php  Migração das tabelas antigas para nomes em português
 docs/der.svg         DER para consulta no README
 ```
 
