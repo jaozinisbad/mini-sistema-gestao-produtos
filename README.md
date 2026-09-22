@@ -37,6 +37,8 @@ Relações: um usuário possui várias cestas; uma cesta possui vários itens; c
 
 O Supabase cria o banco PostgreSQL ao criar o projeto. Na primeira conexão, `Database::connect()` cria automaticamente as cinco tabelas, se não existirem. Não é necessário importar SQL manualmente. O servidor deve apontar para `public`, para que `config.php` e `src` não sejam servidos diretamente.
 
+As tabelas têm Row Level Security (RLS) ativado, sem políticas de acesso pela API pública do Supabase. O backend PHP acessa o PostgreSQL pelo usuário do banco; a autenticação dos usuários do site continua sendo feita pelo próprio PHP.
+
 ## Como usar
 
 1. Cadastre um usuário e entre na conta.
