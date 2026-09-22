@@ -1,6 +1,6 @@
 # Mini Sistema de Gestão de Produtos
 
-Aplicação web acadêmica em PHP orientado a objetos, MySQL/PDO, HTML, CSS, JavaScript e Bootstrap. Permite cadastro e autenticação de usuários, gestão de fornecedores e produtos e uma cesta com uma unidade por produto.
+Aplicação web acadêmica em PHP orientado a objetos, PostgreSQL no Supabase via PDO, HTML, CSS, JavaScript e Bootstrap. Permite cadastro e autenticação de usuários, gestão de fornecedores e produtos e uma cesta com uma unidade por produto.
 
 ## Equipe
 
@@ -22,18 +22,20 @@ Relações: um usuário possui várias cestas; uma cesta possui vários itens; c
 
 ## Requisitos
 
-- PHP 8.1 ou superior, com extensões `pdo_mysql` e `mbstring`.
-- MySQL 8 ou superior.
+- PHP 8.1 ou superior, com extensões `pdo_pgsql` e `mbstring`.
+- Projeto Supabase com banco PostgreSQL.
 - Navegador com JavaScript e acesso à CDN do Bootstrap.
 
 ## Instalação e execução
 
-1. Inicie o MySQL e configure o usuário com permissão para criar banco e tabelas.
-2. Ajuste `config.php` ou defina as variáveis `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD`.
-3. No terminal, dentro desta pasta, execute `php -S localhost:8000 -t public`.
-4. Acesse `http://localhost:8000` e crie uma conta.
+1. Crie um projeto em [Supabase](https://supabase.com/dashboard) e anote a senha do banco definida na criação.
+2. No painel do projeto, abra **Connect → Session pooler**. Copie host, porta, banco e usuário. O modo de sessão usa a porta `5432` e funciona em redes IPv4.
+3. Copie `.env.example` para `.env` e preencha `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD` com os dados do painel. Mantenha `DB_SSLMODE=require`. O arquivo `.env` é ignorado pelo Git; não publique a senha. Variáveis de ambiente do sistema têm prioridade sobre ele.
+4. Ative `extension=pdo_pgsql` e `extension=mbstring` no `php.ini`.
+5. No terminal, dentro desta pasta, execute `php -S localhost:8000 -t public`.
+6. Acesse `http://localhost:8000` e crie uma conta.
 
-Na primeira conexão, `Database::connect()` cria automaticamente o banco e as cinco tabelas, se não existirem. Não é necessário importar SQL manualmente. O servidor deve apontar para `public`, para que `config.php` e `src` não sejam servidos diretamente.
+O Supabase cria o banco PostgreSQL ao criar o projeto. Na primeira conexão, `Database::connect()` cria automaticamente as cinco tabelas, se não existirem. Não é necessário importar SQL manualmente. O servidor deve apontar para `public`, para que `config.php` e `src` não sejam servidos diretamente.
 
 ## Como usar
 
@@ -55,7 +57,7 @@ Na primeira conexão, `Database::connect()` cria automaticamente o banco e as ci
 
 ```text
 config.php           Configuração do MySQL
-src/Database.php     Conexão e criação automática do esquema
+src/Database.php     Conexão PDO/PostgreSQL e criação automática das tabelas
 src/Models.php       Classes User, Supplier, Product e Basket
 public/index.php     Rotas, formulários, AJAX e telas
 docs/der.svg         DER para consulta no README

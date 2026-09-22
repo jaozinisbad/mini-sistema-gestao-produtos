@@ -23,7 +23,7 @@ function positiveId(string $value): int { $id = filter_var($value, FILTER_VALIDA
 
 try { $db = Database::connect(); } catch (Throwable $error) {
     http_response_code(500);
-    exit('Não foi possível conectar ao MySQL. Confira config.php e as instruções no README.');
+    exit('Não foi possível conectar ao PostgreSQL. Confira config.php e as instruções no README.');
 }
 $page = (string)($_GET['page'] ?? (isset($_SESSION['user_id']) ? 'dashboard' : 'login'));
 $action = (string)($_POST['action'] ?? '');
@@ -62,7 +62,7 @@ if ($action !== '') {
             $ids = $_POST['product_ids'] ?? [];
             if (!is_array($ids) || count($ids) === 0) fail('Selecione pelo menos um produto.');
             $basketId = Basket::current($db, (int)$_SESSION['user_id']);
-            $stmt = $db->prepare('INSERT IGNORE INTO basket_items (basket_id,product_id) SELECT ?,id FROM products WHERE id=?');
+            $stmt = $db->prepare('INSERT INTO basket_items (basket_id,product_id) SELECT ?,id FROM products WHERE id=? ON CONFLICT DO NOTHING');
             foreach (array_unique($ids) as $raw) { $id = positiveId((string)$raw); if ($id) $stmt->execute([$basketId,$id]); }
             redirect('basket');
         } elseif ($action === 'remove_item') {

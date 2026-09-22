@@ -42,9 +42,9 @@ final class Basket
         $stmt->execute([$userId]);
         $id = $stmt->fetchColumn();
         if ($id) return (int)$id;
-        $stmt = $db->prepare('INSERT INTO baskets (user_id) VALUES (?)');
+        $stmt = $db->prepare('INSERT INTO baskets (user_id) VALUES (?) RETURNING id');
         $stmt->execute([$userId]);
-        return (int)$db->lastInsertId();
+        return (int)$stmt->fetchColumn();
     }
 
     public static function items(PDO $db, int $basketId): array
