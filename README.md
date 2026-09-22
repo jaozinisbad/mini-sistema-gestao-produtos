@@ -71,6 +71,6 @@ Comece cadastrando um fornecedor; depois, cadastre um produto e escolha esse for
 
 | Nome | RA |
 | --- | --- |
-| **Preencher** | **Preencher** |
+| João Paulo Porte de Meira | 60300541 |
 
-Antes de entregar, preencha os nomes e RAs de todos os integrantes. Cada pessoa da equipe deve fazer commits com sua própria conta Git. Depois, publique o repositório no GitHub ou no serviço indicado pela disciplina e envie o link ao professor.
+Se houver outros integrantes, acrescente seus nomes e RAs nesta tabela. Cada pessoa da equipe deve fazer commits com sua própria conta Git. Depois, publique o repositório no GitHub ou no serviço indicado pela disciplina e envie o link ao professor.
