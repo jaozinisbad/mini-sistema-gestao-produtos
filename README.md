@@ -15,7 +15,7 @@ Foi desenvolvido para um trabalho acadêmico com **PHP orientado a objetos**, **
 
 ## Telas e modelo de dados
 
-Os [esboços no Figma](https://www.figma.com/design/mluNZpMTkSifzuvmTFSpxC) mostram login e criação de conta, cadastros, atualização AJAX, catálogo e cesta. Todas as telas do sistema têm menu de navegação.
+Os [esboços no Figma](https://www.figma.com/design/mluNZpMTkSifzuvmTFSpxC/Mini-Sistema-de-Gest%C3%A3o-de-Produtos-%E2%80%94-Esbo%C3%A7os?node-id=0-1&t=JbnyyylneaRKOo7d-1) mostram login e criação de conta, cadastros, atualização AJAX, catálogo e cesta. Todas as telas do sistema têm menu de navegação.
 
 O diagrama abaixo reúne as cinco tabelas, seus campos e relacionamentos:
 
